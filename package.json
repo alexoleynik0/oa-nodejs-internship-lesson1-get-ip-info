@@ -2,9 +2,16 @@
   "name": "oa-nodejs-internship-lesson1-get-ip-info",
   "version": "1.0.0-alpha",
   "description": "Returns info about current IP address in Node.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexoleynik0/oa-nodejs-internship-lesson1-get-ip-info.git"
+  },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">=8"
   },
   "author": "",
   "license": "ISC",
