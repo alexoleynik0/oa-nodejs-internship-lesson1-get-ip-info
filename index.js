@@ -36,15 +36,16 @@ const EXTERNAL_IP_ADDRESS_API_HTTP_OPTIONS = [
     },
 ];
 
+let attempt = 0;
+
 module.exports.getExternalIpAddress = (
     callback,
     apiHttpOptions = [],
-    requestTimeout = 100,
-    attempt = 0,
 ) => {
     let externalIpAddress = DEFAULT_IP_ADDRESS;
 
     const makeCallback = () => {
+        attempt = 0;
         if (typeof callback === 'function') {
             callback(externalIpAddress);
         }
@@ -54,8 +55,6 @@ module.exports.getExternalIpAddress = (
         module.exports.getExternalIpAddress(
             callback,
             apiHttpOptions,
-            requestTimeout,
-            attempt + 1,
         );
     };
 
@@ -70,6 +69,7 @@ module.exports.getExternalIpAddress = (
         return;
     }
     const requestOptions = combinedRequestOptions[attempt];
+    attempt += 1;
 
     const requestCallback = (response) => {
         response.setEncoding('utf8'); // to not deal with Buffer
@@ -96,7 +96,6 @@ module.exports.getExternalIpAddress = (
     }
 
     httpToUse.request(requestOptions, requestCallback)
-        .setTimeout(requestTimeout)
         .on('error', handleError)
         .end();
 };
