@@ -3,6 +3,14 @@ const { networkInterfaces } = require('os');
 
 const DEFAULT_IP_ADDRESS = '0.0.0.0';
 
+/**
+ * Returns the IP address of current external network.
+ * Can return LAN IP in some cases.
+ *
+ * @param {string|number} [family=IPv4] - The family/version of
+ * network IP address.
+ * @returns {string} IP address or '0.0.0.0' as fallback.
+ */
 module.exports.getIpAddress = (family = 'IPv4') => {
     const netInterfaces = networkInterfaces();
     let ipAddress = DEFAULT_IP_ADDRESS;
@@ -21,6 +29,9 @@ module.exports.getIpAddress = (family = 'IPv4') => {
     return ipAddress;
 };
 
+/**
+ * List of default public IP API services HTTP options.
+ */
 const EXTERNAL_IP_ADDRESS_API_HTTP_OPTIONS = [
     {
         host: 'api.ipify.org', port: 80,
@@ -36,12 +47,29 @@ const EXTERNAL_IP_ADDRESS_API_HTTP_OPTIONS = [
     },
 ];
 
+/**
+ * The number of the current attempt
+ * which points to the httpOptions element.
+ */
 let attempt = 0;
 
-module.exports.getExternalIpAddress = (
-    callback,
-    apiHttpOptions = [],
-) => {
+/**
+ * The callback to be passed to `getExternalIpAddress` function
+ * as first argument.
+ *
+ * @callback getExternalIpAddressCallback
+ * @param {string} ip - IP address or '0.0.0.0' as fallback.
+ */
+
+/**
+ * Returns the external IP address determined using Public IP
+ * address check API services.
+ *
+ * @param {getExternalIpAddressCallback} callback - to be called with found IP.
+ * @param {*[]} [apiHttpOptions=[]] - array of Node.js http options to use
+ * before default list.
+ */
+module.exports.getExternalIpAddress = (callback, apiHttpOptions = []) => {
     let externalIpAddress = DEFAULT_IP_ADDRESS;
 
     const makeCallback = () => {

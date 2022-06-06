@@ -57,7 +57,7 @@ getExternalIpAddress((ipv4Address) => {
 
 ## License
 
-ISC
+[ISC]
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
 
@@ -67,3 +67,4 @@ ISC
    [ipinfo.io/ip]: <http://ipinfo.io/ip>
    [icanhazip.com]: <http://icanhazip.com>
    [ident.me]: <http://ident.me>
+   [ISC]: <https://github.com/alexoleynik0/oa-nodejs-internship-lesson1-get-ip-info/blob/master/LICENSE>
