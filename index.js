@@ -71,6 +71,12 @@ let attempt = 0;
  */
 module.exports.getExternalIpAddress = (callback, apiHttpOptions = []) => {
     let externalIpAddress = DEFAULT_IP_ADDRESS;
+    let abortController;
+    try {
+        abortController = new AbortController();
+    } catch (_err) {
+        // no catch here
+    }
 
     const makeCallback = () => {
         attempt = 0;
@@ -80,6 +86,9 @@ module.exports.getExternalIpAddress = (callback, apiHttpOptions = []) => {
     };
 
     const handleError = () => {
+        if (abortController) {
+            abortController.abort();
+        }
         module.exports.getExternalIpAddress(
             callback,
             apiHttpOptions,
@@ -96,7 +105,10 @@ module.exports.getExternalIpAddress = (callback, apiHttpOptions = []) => {
         makeCallback();
         return;
     }
-    const requestOptions = combinedRequestOptions[attempt];
+    const requestOptions = {
+        ...combinedRequestOptions[attempt],
+        signal: abortController ? abortController.signal : null,
+    };
     attempt += 1;
 
     const requestCallback = (response) => {
