@@ -5,19 +5,30 @@ Node.js utility to get IPv4 or IPv6 addresses of a current machine.
 ## Basic Usage
 
 ```js
-const getIpAddress = require('oa-nodejs-internship-lesson1-get-ip-info').getIpAddress;
+const {
+    getIpAddress,
+    getExternalIpAddress,
+    getExternalIpAddressPromise,
+} = require('oa-nodejs-internship-lesson1-get-ip-info');
 
 const ipv4Address = getIpAddress(); // e.g. '192.0.2.146'
 ```
 
 Or you can use callback-based `getExternalIpAddress` function to get the IP that is seen when you make any HTTP request. This might be useful when first variant gives you LAN IP instead of **WAN IP**.
 
-```js
-const getExternalIpAddress = require('oa-nodejs-internship-lesson1-get-ip-info').getExternalIpAddress;
+The `getExternalIpAddressPromise` is equivalent to the `getExternalIpAddress` but is it's promisified version, so first param (callback) is omitted.
 
+```js
+// if you like callbacks
 getExternalIpAddress((ipv4Address) => {
     console.log(ipv4Address); // e.g. '103.114.98.206'
 });
+
+// if you like Promises
+getExternalIpAddressPromise()
+    .then((ipv4Address) => {
+        console.log(ipv4Address); // e.g. '103.114.98.206'
+    });
 ```
 
 If for some reason it's impossible to specify the IP address, `'0.0.0.0'` is returned as result from any of functions.
@@ -45,10 +56,17 @@ No caching supported, and no multiple concurrent use advised.
 
 ```js
 getExternalIpAddress((ipv4Address) => {
-    // 'https://ipapi.co/ip' was used as first attempt to get IP
-    console.log(ipv4Address);
+    console.log(ipv4Address); // 'https://ipapi.co/ip' was used as first attempt to get IP
 }, [{ host: 'ipapi.co', path: '/ip', port: 443 }]);
+
+// or if you like Promises
+getExternalIpAddressPromise([{ host: 'ident.me' }])
+    .then((ipv4Address) => {
+        console.log(ipv4Address); // 'http://ident.me' was used as first attempt to get IP
+    });
 ```
+
+For more examples see [usage examples].
 
 > Note: By default `'http:'` protocol is used (`80` port). If your service uses 'https:' protocol you need to specify that in the **apiHttpOptions** array's item by passing `port: 443` (as in example above) or `protocol: 'https:'`. 
 > If **crypto** module is disabled in the current Node.js build, no error will be shown.
@@ -67,4 +85,5 @@ getExternalIpAddress((ipv4Address) => {
    [ipinfo.io/ip]: <http://ipinfo.io/ip>
    [icanhazip.com]: <http://icanhazip.com>
    [ident.me]: <http://ident.me>
+   [usage examples]: <https://github.com/alexoleynik0/oa-nodejs-internship-lesson1-get-ip-info/tree/master/examples>
    [ISC]: <https://github.com/alexoleynik0/oa-nodejs-internship-lesson1-get-ip-info/blob/master/LICENSE>

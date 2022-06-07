@@ -44,6 +44,9 @@ const EXTERNAL_IP_ADDRESS_API_HTTP_OPTIONS = [
     },
 ];
 
+// TODO: change `attempt` to something better as it works bad at
+// multiple concurrent calls.
+// Why would you need it to be called multiple times?
 /**
  * The number of the current attempt
  * which points to the httpOptions element.
@@ -124,3 +127,18 @@ module.exports.getExternalIpAddress = (callback, apiHttpOptions = []) => {
         .on('error', handleError)
         .end();
 };
+
+/**
+ * Promise version of the `getExternalIpAddress` function.
+ *
+ * @param {*[]} [apiHttpOptions=[]] - array of Node.js http options to use
+ * before default list.
+ * @returns {Promise} Promise object represents the found IP.
+ */
+module.exports.getExternalIpAddressPromise = (
+    apiHttpOptions = [],
+) => new Promise((resolve) => {
+    module.exports.getExternalIpAddress((externalIpAddress) => {
+        resolve(externalIpAddress);
+    }, apiHttpOptions);
+});
